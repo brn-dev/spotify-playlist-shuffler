@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Spotify Login Callback</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+
+<body>
+  <script>
+    function isNullOrUndefined(obj) {
+      return obj === null || obj === undefined;
+    }
+
+    function main() {
+      const hash = {};
+      location.hash.replace(/^#\/?/, '').split('&').forEach(function (kv) {
+        const spl = kv.indexOf('=');
+        if (spl !== -1) {
+          hash[kv.substring(0, spl)] = decodeURIComponent(kv.substring(spl + 1));
+        }
+      });
+      const token = {
+        token: hash.access_token,
+        expiresAt: new Date().getTime() + (+hash.expires_in) * 1000,
+        type: hash.token_type
+      };
+
+      if (isNullOrUndefined(token) ||
+        isNullOrUndefined(token.token) ||
+        token.token === '') {
+          console.log(token);
+        window.close();
+      }
+      localStorage["spotify_api_token"] = JSON.stringify(token);
+
+      window.close();
+    }
+
+    main();
+
+  </script>
+</body>
+
+</html>

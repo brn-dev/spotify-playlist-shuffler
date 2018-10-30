@@ -1,0 +1,9 @@
+<div class="container" id="outer-container">
+  <h1>Shuffle:</h1>
+  <p>Local tracks can not be copied!</p>
+  <div class="container scroll" id="inner-container">
+    <div *ngFor="let playlist of spotifyDataService.playlists.items" (click)="confirmShuffle(playlist)" class="playlist">
+      {{ playlist.name }}
+    </div>
+  </div>
+</div>
