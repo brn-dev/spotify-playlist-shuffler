@@ -1,0 +1,87 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-height: 100%;
+}
+
+.title {
+  margin-top: 0.25cm;
+  color: rgb(64, 64, 64);
+}
+
+.actions {
+    padding-top: 0.25cm;
+}
+
+.action {
+  all: unset;
+  background-color: rgb(61, 128, 237);
+  color: white;
+  padding: 0.3em 1em;
+  box-shadow: 0px 3px 10px rgba(0, 0, 0, 0.2);
+  width: 8em;
+  text-align: center;
+}
+
+.action:hover {
+  cursor: pointer;
+}
+
+.action:disabled {
+    background-color: rgb(128, 128, 128);
+}
+
+.action:disabled:hover {
+    cursor: initial;
+}
+
+.action:first-child {
+  margin-right: 1cm;
+}
+
+.progress {
+    margin-top: 0.5cm;
+}
+
+.tracks {
+  overflow-y: auto;
+  margin-bottom: 0.5cm;
+  margin-top: 0.5cm;
+}
+
+.tracks::-webkit-scrollbar {
+  width: 6px;
+  background-color: #F5F5F5;
+}
+
+.tracks::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, .3);
+  background-color: #AAA;
+}
+
+.tracks::-webkit-scrollbar-track {
+  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+  border-radius: 10px;
+  background-color: #F5F5F5;
+}
+
+.track {
+  display: flex;
+  flex-direction: row;
+//   border-bottom: 1px solid rgba(61, 128, 237, 0.2);
+  padding: 0.35cm;
+}
+
+.track:nth-child(odd) {
+    background-color: rgb(235, 235, 235);
+}
+
+.track-component {
+  flex: 1;
+}
+
+.track-component:not(:last-child) {
+  padding-right: 0.25cm;
+}

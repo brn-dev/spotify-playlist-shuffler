@@ -62,9 +62,26 @@ export interface UserObjectPublic {
     uri: string;
 }
 
+export interface Artist {
+    href: string;
+    id: string;
+    name: string;
+    uri: string;
+}
+
+export interface Album {
+    href: string;
+    id: string;
+    name: string;
+    uri: string;
+}
+
 export interface Track {
+    album: Album;
+    artists: Artist[];
     id: string;
     uri: string;
+    name: string;
 }
 
 export interface PlaylistTrackObject {

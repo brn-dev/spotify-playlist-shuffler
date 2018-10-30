@@ -10,12 +10,14 @@ import { CanActivateViaSpotifyToken } from './services/can-activate-via-spotify-
 import { SpotifyAuthService } from './services/spotify-auth.service';
 import { PleaseLoginComponent } from './components/please-login/please-login.component';
 import { SpotifyDataService } from './services/spotify-data.service';
+import { PlaylistDetailComponent } from './components/playlist-detail/playlist-detail.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     PlaylistsComponent,
-    PleaseLoginComponent
+    PleaseLoginComponent,
+    PlaylistDetailComponent
   ],
   imports: [
     BrowserModule,

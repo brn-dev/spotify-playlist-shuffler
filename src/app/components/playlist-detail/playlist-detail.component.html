@@ -1,0 +1,21 @@
+<div class="container">
+  <section class="title">
+    <h1>{{ playlist ? playlist.name : '' }}</h1>
+  </section>
+  <section class="actions">
+    <button class="action" (click)="copyShuffle()" [disabled]="!actionsEnabled">Copy and Shuffle</button>
+    <button class="action" (click)="localShuffle()" [disabled]="!actionsEnabled">Shuffle locally</button>
+  </section>
+  <section class="progress" *ngIf="progressObj !== null">
+    <progress [value]="progressObj.value" [max]="progressObj.end"></progress>
+  </section>
+  <section class="tracks">
+    <div *ngFor="let track of tracks" class="track">
+      <span class="track-component track-name">{{ track.track.name || '' }}</span>
+      <span class="track-component track-album">{{ track.track.album.name || '' }}</span>
+      <span class="track-component track-artists">
+        <span class="artist" *ngFor="let artist of (track.track.artists || [])">{{ artist.name }}</span>
+      </span>
+    </div>
+  </section>
+</div>

@@ -14,7 +14,7 @@ export class SpotifyAuthService {
   }
 
   private CLIENT_ID = 'c7d128c546bb4d1884fd460e0245a9c8';
-  private REDIRECT_URI = 'http://localhost:4200/callback';
+  private REDIRECT_URI = 'C:/Users/Brn/GitHub/spotify-playlist-shuffler/src/callback.html';
   private SCOPES = [
     'user-read-private',
     'playlist-read-private',

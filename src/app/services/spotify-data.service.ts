@@ -6,6 +6,7 @@ import {
 import { HttpClient, HttpHeaders, HttpParams, HttpRequest } from '@angular/common/http';
 import { SpotifyTokenService } from './spotify-token.service';
 import { isNullOrUndefined } from 'util';
+import { ProgressObject } from '../models/progress-object';
 
 @Injectable({
   providedIn: 'root'
@@ -30,26 +31,6 @@ export class SpotifyDataService {
       .set('Content-Type',
         'application/json');
     return headers;
-  }
-
-  private async getPlaylistByName(playlistName: string, refetchPlaylists = false): Promise<PlaylistBaseObject> {
-    if (refetchPlaylists) {
-      await this.loadPlaylists();
-    }
-    for (const playlist of this.playlists.items) {
-      if (playlist.name === playlistName) {
-        return playlist;
-      }
-    }
-    return null;
-  }
-
-  private async getTracksOfPlaylist(playlist: PlaylistBaseObject): Promise<PlaylistTracksResponse> {
-    const headers = this.getAuthHeaders();
-    return await this.http
-      .get<PlaylistTracksResponse>(
-        `https://api.spotify.com/v1/playlists/${playlist.id}/tracks`,
-        { headers }).toPromise();
   }
 
   private async removeAllTracksFromPlaylist(playlist: PlaylistBaseObject): Promise<void> {
@@ -102,6 +83,53 @@ export class SpotifyDataService {
     this.addTracksToPlaylist(destPlaylist, newTracks);
   }
 
+  public async getPlaylistByName(playlistName: string, refetchPlaylists = false): Promise<PlaylistBaseObject> {
+    if (refetchPlaylists) {
+      await this.loadPlaylists();
+    }
+    for (const playlist of this.playlists.items) {
+      if (playlist.name === playlistName) {
+        return playlist;
+      }
+    }
+    return null;
+  }
+
+  public async getPlaylistById(playlistId: string, refetchPlaylists = false): Promise<PlaylistBaseObject> {
+    if (refetchPlaylists) {
+      await this.loadPlaylists();
+    }
+    for (const playlist of this.playlists.items) {
+      if (playlist.id === playlistId) {
+        return playlist;
+      }
+    }
+    return null;
+  }
+
+  private async moveTracks(
+    playlist: PlaylistBaseObject,
+    rangeStart: number,
+    rangeLength: number,
+    insertBefore: number): Promise<void> {
+    const url = `https://api.spotify.com/v1/playlists/${playlist.id}/tracks`;
+    const body = {
+      range_start: rangeStart,
+      range_length: rangeLength,
+      insert_before: insertBefore
+    };
+    const headers = this.getAuthHeaders();
+    await this.http.put(url, body, { headers }).toPromise();
+  }
+
+  public async getTracksOfPlaylist(playlist: PlaylistBaseObject): Promise<PlaylistTracksResponse> {
+    const headers = this.getAuthHeaders();
+    return await this.http
+      .get<PlaylistTracksResponse>(
+        `https://api.spotify.com/v1/playlists/${playlist.id}/tracks`,
+        { headers }).toPromise();
+  }
+
   public async loadPlaylists(): Promise<ListOfCurrentUsersPlaylistsResponse> {
     const headers = this.getAuthHeaders();
     this.playlists = await this.http.get<ListOfCurrentUsersPlaylistsResponse>
@@ -116,7 +144,7 @@ export class SpotifyDataService {
     return this.user;
   }
 
-  public async shufflePlaylist(playlist: PlaylistBaseObject, destPlaylistName: string) {
+  public async copyShufflePlaylist(playlist: PlaylistBaseObject, destPlaylistName: string) {
     if (isNullOrUndefined(this.user)) {
       await this.loadUser();
     }
@@ -128,6 +156,22 @@ export class SpotifyDataService {
       const newPlaylist = await this.createPlaylistFromName(destPlaylistName);
       await this.transferTracksRandomly(playlist, newPlaylist);
       await this.loadPlaylists();
+    }
+  }
+
+  // Fisher-Yates shuffle: https://en.wikipedia.org/wiki/Fisher%E2%80%93Yates_shuffle
+  public async localShufflePlaylist(playlist: PlaylistBaseObject, progressObj: ProgressObject = null) {
+    const trackCount = (await this.getTracksOfPlaylist(playlist)).items.length;
+    progressObj.start = 0;
+    progressObj.end = trackCount - 1;
+    progressObj.value = 0;
+    for (let i = trackCount - 1; i >= 1; i--) {
+      const j = this.randIntBetween(0, i + 1);
+      if (i !== j) {
+        await this.moveTracks(playlist, i, 1, j);
+        await this.moveTracks(playlist, j + 1, 1, i);
+      }
+      progressObj.value++;
     }
   }
 }
