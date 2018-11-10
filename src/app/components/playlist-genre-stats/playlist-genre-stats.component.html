@@ -2,21 +2,25 @@
   <section class="title">
     <h1>{{ playlist ? playlist.name : '' }}</h1>
   </section>
-  <section class="actions">
+  <section class="info">
+    Genres provided by <a href="https://www.last.fm" target="blank">last.fm</a>
+  </section>
+  <!-- <section class="actions">
     <button class="action" (click)="copyShuffle()" [disabled]="!actionsEnabled">Copy and Shuffle</button>
     <button class="action" (click)="localShuffle()" [disabled]="!actionsEnabled">Shuffle locally</button>
     <button class="action" (click)="genreStatistics()" [disabled]="!actionsEnabled">Genre Statistics</button>
-  </section>
+  </section> -->
   <section class="progress" *ngIf="progressObj !== null">
+    <div>Gathering data...</div>
     <progress [value]="progressObj.value" [max]="progressObj.end"></progress>
   </section>
-  <section class="tracks">
-    <div *ngFor="let track of tracks" class="track">
-      <span class="track-component track-name">{{ track.track.name || '' }}</span>
-      <span class="track-component track-album">{{ track.track.album.name || '' }}</span>
-      <span class="track-component track-artists">
-        <span class="artist" *ngFor="let artist of (track.track.artists || [])">{{ artist.name }}</span>
-      </span>
+  <section class="chart">
+    <canvas id="genresChart"></canvas>
+  </section>
+  <section class="genre-list">
+    <div *ngFor="let genre of genres" class="genre">
+      <label class="genre__name">{{ genre.name }}</label>
+      <label class="genre__count">{{ genre.count }}</label>
     </div>
   </section>
 </div>

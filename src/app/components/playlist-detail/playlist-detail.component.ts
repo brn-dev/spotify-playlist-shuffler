@@ -3,6 +3,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { PlaylistBaseObject, PlaylistTrackObject } from 'src/app/models/spotify-models';
 import { SpotifyDataService } from 'src/app/services/spotify-data.service';
 import { ProgressObject } from 'src/app/models/progress-object';
+import { AngularWaitBarrier } from 'blocking-proxy/built/lib/angular_wait_barrier';
 
 @Component({
   selector: 'app-playlist-detail',
@@ -38,7 +39,9 @@ export class PlaylistDetailComponent implements OnInit {
     this.actionsEnabled = false;
     // TODO: let the user choose the name of the new playlist
     const destinationPlaylistName = this.playlist.name + ' - shuffled';
-    await this.spotifyDataService.copyShufflePlaylist(this.playlist, destinationPlaylistName);
+    this.progressObj = new ProgressObject();
+    await this.spotifyDataService.copyShufflePlaylist(this.playlist, destinationPlaylistName, this.progressObj);
+    this.progressObj = null;
     alert(`Your playlist has been copied to and shuffled at "${destinationPlaylistName}"`);
     this.actionsEnabled = true;
   }
@@ -51,6 +54,10 @@ export class PlaylistDetailComponent implements OnInit {
     this.progressObj = null;
     alert('Your playlist has been shuffled');
     this.actionsEnabled = true;
+  }
+
+  public async genreStatistics(): Promise<void> {
+    await this.router.navigateByUrl(`playlist-genres/${this.playlist.id}`);
   }
 
 }

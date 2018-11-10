@@ -11,13 +11,15 @@ import { SpotifyAuthService } from './services/spotify-auth.service';
 import { PleaseLoginComponent } from './components/please-login/please-login.component';
 import { SpotifyDataService } from './services/spotify-data.service';
 import { PlaylistDetailComponent } from './components/playlist-detail/playlist-detail.component';
+import { PlaylistGenreStatsComponent } from './components/playlist-genre-stats/playlist-genre-stats.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     PlaylistsComponent,
     PleaseLoginComponent,
-    PlaylistDetailComponent
+    PlaylistDetailComponent,
+    PlaylistGenreStatsComponent
   ],
   imports: [
     BrowserModule,

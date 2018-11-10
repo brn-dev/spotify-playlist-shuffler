@@ -36,7 +36,7 @@
     cursor: initial;
 }
 
-.action:first-child {
+.action:not(:last-child) {
   margin-right: 1cm;
 }
 
@@ -84,4 +84,13 @@
 
 .track-component:not(:last-child) {
   padding-right: 0.25cm;
+}
+
+.artist:not(:last-child) {
+  padding-right: 0.2cm;
+}
+
+.artist:not(:last-child)::after {
+  content: '|';
+  padding-left: 0.2cm;
 }
