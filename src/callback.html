@@ -9,34 +9,41 @@
 </head>
 
 <body>
+  <div id="output"></div>
   <script>
     function isNullOrUndefined(obj) {
       return obj === null || obj === undefined;
     }
 
     function main() {
-      const hash = {};
-      location.hash.replace(/^#\/?/, '').split('&').forEach(function (kv) {
-        const spl = kv.indexOf('=');
-        if (spl !== -1) {
-          hash[kv.substring(0, spl)] = decodeURIComponent(kv.substring(spl + 1));
-        }
-      });
-      const token = {
-        token: hash.access_token,
-        expiresAt: new Date().getTime() + (+hash.expires_in) * 1000,
-        type: hash.token_type
-      };
+      try {
+        const hash = {};
+        location.hash.replace(/^#\/?/, '').split('&').forEach(function (kv) {
+          const spl = kv.indexOf('=');
+          if (spl !== -1) {
+            hash[kv.substring(0, spl)] = decodeURIComponent(kv.substring(spl + 1));
+          }
+        });
+        const token = {
+          token: hash.access_token,
+          expiresAt: new Date().getTime() + (+hash.expires_in) * 1000,
+          type: hash.token_type
+        };
 
-      if (isNullOrUndefined(token) ||
-        isNullOrUndefined(token.token) ||
-        token.token === '') {
+        if (isNullOrUndefined(token) ||
+          isNullOrUndefined(token.token) ||
+          token.token === '') {
           console.log(token);
-        window.close();
-      }
-      localStorage["spotify_api_token"] = JSON.stringify(token);
+          window.close();
+        }
+        localStorage["spotify_api_token"] = JSON.stringify(token);
 
-      window.close();
+        document.getElementById('output').innerHTML = 'Authentication successful';
+
+        window.close();
+      } catch (err) {
+        document.getElementById('output').innerHTML = JSON.stringify(err);
+      }
     }
 
     main();
